@@ -9,13 +9,11 @@ import {
   Settings,
   User,
 } from "lucide-react";
-import { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -23,9 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
+import useSignout from "@/hooks/useSignout";
 
 export const title = "Profile with Preferences";
 
@@ -36,21 +32,7 @@ interface IProps {
 }
 
 const UserDropdown = ({ name, email, image }: IProps) => {
-  const router = useRouter();
-  const signOutHandler = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess() {
-          toast.success("Signed out successfully");
-          router.push("/");
-        },
-        onError(error) {
-          toast.error("Failed to sign out");
-        },
-      },
-    });
-  };
-
+  const signOutHandler = useSignout();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
