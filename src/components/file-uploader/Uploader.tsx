@@ -218,8 +218,6 @@ const Uploader: FC<IProps> = ({ value, onChange }) => {
   };
 
   const renderContent = () => {
-    console.log("fileState", fileState);
-
     if (fileState.uploading && fileState.file) {
       return (
         <RenderUploadingState
