@@ -1,7 +1,8 @@
 import z from "zod";
 
-export const courseLevels = ["Beginner", "Intermediate", "Advanced"];
-export const courseStatus = ["Draft", "Published", "Archived"];
+export const courseLevels = ["Beginner", "Intermediate", "Advanced"] as const;
+// Must match `CourseStatus` in prisma/schema.prisma (Archive, not "Archived").
+export const courseStatus = ["Draft", "Published", "Archive"] as const;
 export const coursesCategories = [
   "Development",
   "Business",

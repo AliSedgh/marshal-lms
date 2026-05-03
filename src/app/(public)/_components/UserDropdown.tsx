@@ -39,12 +39,12 @@ const UserDropdown = ({ name, email, image }: IProps) => {
         <Button className="relative h-10 w-10 rounded-full" variant="ghost">
           <Avatar>
             <AvatarImage alt={name} src={image} />
-            <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <ChevronDown size={16} className="opacity-60" aria-hidden />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
+      <DropdownMenuContent align="end" className="min-w-44">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm leading-none font-medium">{name}</p>

@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeft, PlusIcon, SparkleIcon } from "lucide-react";
+import { ArrowLeft, Loader2, PlusIcon, SparkleIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -36,8 +36,15 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import RichTextEditor from "@/components/rich-text-editor/Editor";
+import Uploader from "@/components/file-uploader/Uploader";
+import { createCourse } from "./actions";
+import { toast } from "sonner";
+import { tryCatch } from "@/hooks/try-catch";
+import { useRouter } from "next/navigation";
 
 const CourseCreationPage = () => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -55,9 +62,21 @@ const CourseCreationPage = () => {
   });
 
   const onSubmit = (data: CourseSchemaType) => {
-    console.log(data);
+    startTransition(async () => {
+      const result = await tryCatch(createCourse(data));
+      if (result.error) {
+        toast.error("An error occurred while creating the course");
+        return;
+      }
+      if (result?.data?.status === "success") {
+        toast.success(result?.data?.message);
+        form.reset();
+        router.push("/admin/courses");
+      } else if (result?.data?.status === "error") {
+        toast.error(result?.data?.message);
+      }
+    });
   };
-
   const generateSlug = () => {
     const titleValue = form.getValues("title");
     const slug = slugify(titleValue);
@@ -165,7 +184,7 @@ const CourseCreationPage = () => {
                     <FieldLabel htmlFor="form-rhf-demo-small-description">
                       Description
                     </FieldLabel>
-                    <RichTextEditor />
+                    <RichTextEditor field={field} />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -180,16 +199,10 @@ const CourseCreationPage = () => {
                     <FieldLabel htmlFor="form-rhf-demo-small-description">
                       Thumbnail image
                     </FieldLabel>
-                    <Input
-                      placeholder="thumbnail url"
-                      {...field}
-                      id="form-rhf-demo-file-key"
-                      aria-invalid={fieldState.invalid}
-                      autoComplete="off"
+                    <Uploader
+                      value={field.value}
+                      onChange={(value) => form.setValue("fileKey", value)}
                     />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
                   </Field>
                 )}
               />
@@ -260,9 +273,14 @@ const CourseCreationPage = () => {
                       <FieldLabel htmlFor="form-rhf-demo-small-description">
                         Duration
                       </FieldLabel>
+
                       <Input
                         placeholder="Duration in hours"
                         {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? null : Number(value)); // تبدیل به number
+                        }}
                         type="number"
                         id="form-rhf-demo-duration"
                         aria-invalid={fieldState.invalid}
@@ -285,6 +303,10 @@ const CourseCreationPage = () => {
                       <Input
                         placeholder="price"
                         {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? null : Number(value)); // تبدیل به number
+                        }}
                         type="number"
                         id="form-rhf-demo-price"
                         aria-invalid={fieldState.invalid}
@@ -322,9 +344,17 @@ const CourseCreationPage = () => {
                 )}
               />
             </FieldGroup>
-            <Button type="submit">
-              Create Course
-              <PlusIcon className="ml-1" size={16} />
+            <Button disabled={isPending} type="submit">
+              {isPending ? (
+                <>
+                  Creating...
+                  <Loader2 className="ml-1" size={16} />
+                </>
+              ) : (
+                <>
+                  Create Course <PlusIcon className="ml-1" size={16} />
+                </>
+              )}
             </Button>
           </form>
         </CardContent>
