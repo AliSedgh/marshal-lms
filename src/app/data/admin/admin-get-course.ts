@@ -22,8 +22,26 @@ export const adminGetCourse = async (courseId: string) => {
       category: true,
       createdAt: true,
       updatedAt: true,
+      chapter: {
+        select: {
+          id: true,
+          title: true,
+          position: true,
+          lessons: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              thumbnailKey: true,
+              position: true,
+              videoKey: true,
+            },
+          },
+        },
+      },
     },
   });
+
   if (!course) {
     return notFound();
   }

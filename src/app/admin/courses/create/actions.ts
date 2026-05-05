@@ -59,3 +59,14 @@ export const createCourse = async (
     return { status: "error", message: "Failed to create course" };
   }
 };
+
+export const createLesson = async () => {
+  await prisma.lesson.create({
+    data: {
+      position: 1,
+      title: "lesson 1 chapter 1",
+      chapterId: "90712f91-2c48-464d-be0c-ea4687f28e02",
+      videoKey: "",
+    },
+  });
+};

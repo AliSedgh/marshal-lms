@@ -65,7 +65,7 @@ const AdminCourseCard = ({ course }: IProps) => {
         </div>
         <Image
           className="w-full rounded-t-lg aspect-video h-full object-cover"
-          src={url}
+          src={url ?? ""}
           alt={"thumbnail"}
           width={600}
           height={400}

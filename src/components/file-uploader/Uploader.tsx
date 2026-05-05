@@ -40,7 +40,7 @@ const Uploader: FC<IProps> = ({ value, onChange }) => {
     error: false,
     fileType: "image",
     key: value,
-    objectUrl: fileUrl,
+    objectUrl: fileUrl ?? "",
   });
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -81,6 +81,7 @@ const Uploader: FC<IProps> = ({ value, onChange }) => {
         toast.error("Failed to delete file");
         setFileState((prev) => ({
           ...prev,
+          objectUrl: undefined,
           isDeleting: false,
           error: true,
         }));
@@ -155,7 +156,8 @@ const Uploader: FC<IProps> = ({ value, onChange }) => {
           ...prev,
           uploading: false,
           progress: 0,
-          error: true,
+          isDeleting: false,
+          // error: true,
         }));
         return;
       }
@@ -248,8 +250,7 @@ const Uploader: FC<IProps> = ({ value, onChange }) => {
     maxFiles: 1,
     maxSize: 5 * 1024 * 1024, // 5MB
     onDropRejected,
-    disabled:
-      fileState.uploading || fileState.isDeleting || !!fileState.objectUrl,
+    disabled: fileState.uploading || !!fileState.objectUrl,
   });
 
   useEffect(() => {
