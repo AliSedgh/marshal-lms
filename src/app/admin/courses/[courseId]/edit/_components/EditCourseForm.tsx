@@ -175,6 +175,7 @@ const EditCourseForm = ({ course, courseId }: Props) => {
                 Thumbnail image
               </FieldLabel>
               <Uploader
+                fileTypeAccepted="image"
                 value={field.value}
                 onChange={(value) => form.setValue("fileKey", value)}
               />

@@ -311,7 +311,10 @@ const CourseStructure = ({ data }: IProps) => {
                                 data={{ type: "lesson", chapterId: item.id }}
                               >
                                 {(listeners) => (
-                                  <div className="flex items-center rounded-sm justify-between hover:bg-accent p-3 border-b border-border">
+                                  <Link
+                                    href={`/admin/courses/${data.id}/${item.id}/${lesson.id}`}
+                                    className="flex items-center rounded-sm justify-between hover:bg-accent p-3 border-b border-border"
+                                  >
                                     <div className="flex items-center gap-2">
                                       <Button
                                         variant="ghost"
@@ -333,7 +336,7 @@ const CourseStructure = ({ data }: IProps) => {
                                       lessonId={lesson.id}
                                       courseId={data.id}
                                     />
-                                  </div>
+                                  </Link>
                                 )}
                               </SortableItem>
                             ))}

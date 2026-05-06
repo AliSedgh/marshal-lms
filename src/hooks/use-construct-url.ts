@@ -1,9 +1,7 @@
 import { env } from "@/lib/env";
 
 const useConstructUrl = (key: string) => {
-  if (key)
-    return `https://${env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.tigrisfiles.io/${key}`;
-  return null;
+  return `https://${env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.tigrisfiles.io/${key}`;
 };
 
 export default useConstructUrl;
