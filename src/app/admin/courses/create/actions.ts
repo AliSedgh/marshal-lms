@@ -60,13 +60,13 @@ export const createCourse = async (
   }
 };
 
-export const createLesson = async () => {
+export const createChapter = async () => {
   await prisma.lesson.create({
     data: {
-      position: 1,
-      title: "lesson 1 chapter 1",
+      position: 2,
+      title: "lesson 2",
       chapterId: "90712f91-2c48-464d-be0c-ea4687f28e02",
-      videoKey: "",
+      videoKey: "test.mp4",
     },
   });
 };
