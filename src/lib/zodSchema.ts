@@ -52,4 +52,29 @@ export const courseSchema = z.object({
     .max(500, { message: "Duration must be less than 500 hours" }),
 });
 
+export const ChapterSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Chapter name must be at least 3 characters" })
+    .max(100, { message: "Chapter name must be less than 100 characters" }),
+  courseId: z.string().uuid({ message: "Invalid course id" }),
+});
+
+export const LessonSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Lesson name must be at least 3 characters" })
+    .max(100, { message: "Lesson name must be less than 100 characters" }),
+  courseId: z.string().uuid({ message: "Invalid course id" }),
+  chapterId: z.string().uuid({ message: "Invalid chapter id" }),
+  description: z
+    .string()
+    .min(3, { message: "Description must be at least 3 characters" })
+    .optional(),
+  videoKey: z.string().optional(),
+  thumbnailKey: z.string().optional(),
+});
+
 export type CourseSchemaType = z.infer<typeof courseSchema>;
+export type ChapterSchemaType = z.infer<typeof ChapterSchema>;
+export type LessonSchemaType = z.infer<typeof LessonSchema>;
