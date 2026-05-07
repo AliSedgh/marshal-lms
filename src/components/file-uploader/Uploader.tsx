@@ -268,7 +268,6 @@ const Uploader: FC<IProps> = ({ value, onChange, fileTypeAccepted }) => {
     }
     return <RenderEmptyState isDragActive={isDragActive} />;
   };
-  console.log("dfdfdfdf", fileState.uploading, fileState.objectUrl);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -281,7 +280,7 @@ const Uploader: FC<IProps> = ({ value, onChange, fileTypeAccepted }) => {
             "video/*": [".mp4", ".mov", ".avi", ".mkv", ".webm"],
           },
     maxFiles: 1,
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: fileTypeAccepted === "image" ? 5 * 1024 * 1024 : 500 * 1024 * 1024,
     onDropRejected,
     disabled: fileState.uploading || !!fileState.objectUrl,
   });

@@ -37,6 +37,7 @@ import { AdminCourseSingularType } from "@/app/data/admin/admin-get-course";
 import slugify from "slugify";
 import editCourse from "../[courseId]/edit/action";
 import { createCourse } from "../create/actions";
+import { useConfetti } from "@/hooks/use-confetti";
 
 type Props = {
   course?: AdminCourseSingularType;
@@ -45,6 +46,7 @@ type Props = {
 
 const CourseInfoForm = ({ course, courseId }: Props) => {
   const [isPending, startTransition] = useTransition();
+  const { triggerConfetti } = useConfetti();
   const router = useRouter();
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
@@ -73,6 +75,7 @@ const CourseInfoForm = ({ course, courseId }: Props) => {
       }
       if (result?.data?.status === "success") {
         toast.success(result?.data?.message);
+        if (!courseId) triggerConfetti();
         form.reset();
         router.push("/admin/courses");
       } else if (result?.data?.status === "error") {
