@@ -7,20 +7,13 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { requireAdmin } from "@/app/data/admin/require-admin";
 
-const aj = arcjet
-  .withRule(
-    detectBot({
-      mode: "LIVE",
-      allow: [],
-    }),
-  )
-  .withRule(
-    fixedWindow({
-      mode: "LIVE",
-      window: "1m",
-      max: 5,
-    }),
-  );
+const aj = arcjet.withRule(
+  fixedWindow({
+    mode: "LIVE",
+    window: "1m",
+    max: 5,
+  }),
+);
 
 export async function DELETE(request: Request) {
   const session = await requireAdmin();

@@ -4,13 +4,40 @@ import { requireAdmin } from "@/app/data/admin/require-admin";
 import prisma from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
 import { LessonSchema, LessonSchemaType } from "@/lib/zodSchema";
+import arcjet from "@/lib/arcjet";
+import { request } from "@arcjet/next";
+import { fixedWindow } from "@arcjet/next";
+
+const aj = arcjet.withRule(
+  fixedWindow({
+    mode: "LIVE",
+    window: "1m",
+    max: 5,
+  }),
+);
 
 export const updateLesson = async (
   data: LessonSchemaType,
   lessonId: string,
 ): Promise<ApiResponse<null>> => {
-  await requireAdmin();
+  const user = await requireAdmin();
   try {
+    const req = await request();
+    const decision = await aj.protect(req, {
+      fingerprints: user.user.id!,
+    });
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return { status: "error", message: "Rate limit exceeded" };
+      }
+      if (decision.reason.isBot()) {
+        return { status: "error", message: "Bot detected" };
+      }
+      return {
+        status: "error",
+        message: "You are not authorized to edit this course",
+      };
+    }
     const result = LessonSchema.safeParse(data);
     if (!result.success) {
       return {

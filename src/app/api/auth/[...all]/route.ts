@@ -77,7 +77,6 @@ async function protect(req: NextRequest): Promise<ArcjetDecision> {
     } else {
       // Otherwise use rate limit and detect bot
       return arcjet
-        .withRule(detectBot(botOptions))
         .withRule(slidingWindow(rateLimitOptions))
         .protect(req, { fingerprints: userId });
     }

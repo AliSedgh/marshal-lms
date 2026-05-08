@@ -21,6 +21,10 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { enrollInCourseAction } from "./actions";
+import { checkInCourseBought } from "@/app/data/user/user-is-enroll";
+import Link from "next/link";
+import EnrollmentButton from "./_components/EnrollmentButton";
 
 interface IProps {
   params: Promise<{ courseSlug: string }>;
@@ -29,6 +33,7 @@ interface IProps {
 const SlugPage: FC<IProps> = async ({ params }) => {
   const { courseSlug } = await params;
   const course = await getIndividualCourse(courseSlug);
+  const isEnrolled = await checkInCourseBought(course.id);
   const url = `https://${env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.tigrisfiles.io/${course.fileKey}`;
 
   return (
@@ -244,8 +249,14 @@ const SlugPage: FC<IProps> = async ({ params }) => {
                   </li>
                 </ul>
               </div>
+              {isEnrolled ? (
+                <Button className="w-full">
+                  <Link href={"/dashboard"}>Watch Course</Link>
+                </Button>
+              ) : (
+                <EnrollmentButton courseId={course.id} />
+              )}
 
-              <Button className="w-full">Enroll Now!</Button>
               <p className="text-xs text-muted-foreground mt-3">
                 30-day mony-back guarantee
               </p>
