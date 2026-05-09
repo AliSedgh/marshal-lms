@@ -227,12 +227,10 @@ const CourseStructure = ({ data }: IProps) => {
 
           success: (result) => {
             if (result?.status === "success") return result.message;
-            console.log("Failed to reorder lessons", result);
             throw new Error(result?.message);
           },
           error: (error) => {
             setItems(previousItems);
-            console.log("Failed to reorder lessons", error);
             return "Failed to reorder lessons";
           },
         });

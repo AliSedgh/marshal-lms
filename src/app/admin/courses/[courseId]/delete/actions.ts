@@ -48,7 +48,7 @@ export const deleteCourse = async (
       message: "Course deleted successfully",
     };
   } catch (error) {
-    console.log("errrrr", error);
+    ("errrrr", error);
 
     return {
       status: "error",

@@ -14,12 +14,12 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { authClient } from "@/lib/auth-client";
-import React, { useState, useTransition } from "react";
+import React, { Suspense, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
 
-const VerifyRequestPage = () => {
+const VerifyRequest = () => {
   const [otp, setOtp] = useState("");
   const [emailPending, emailTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -92,6 +92,14 @@ const VerifyRequestPage = () => {
         </Button>
       </CardContent>
     </Card>
+  );
+};
+
+const VerifyRequestPage = () => {
+  return (
+    <Suspense>
+      <VerifyRequest />
+    </Suspense>
   );
 };
 

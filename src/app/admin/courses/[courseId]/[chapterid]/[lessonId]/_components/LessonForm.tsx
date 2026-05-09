@@ -35,8 +35,6 @@ interface IProps {
   courseId: string;
 }
 const LessonForm = ({ data, chapterId, courseId }: IProps) => {
-  console.log("data", data);
-
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof LessonSchema>>({
     resolver: zodResolver(LessonSchema),

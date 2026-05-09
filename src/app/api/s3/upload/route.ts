@@ -50,8 +50,6 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     const { fileName, contentType, size } = validation.data;
-    console.log("validation", validation?.data);
-
     const uniqueKey = `${uuidv4()}-${fileName}`;
     // Presigned browser PUT: do not use ChecksumAlgorithm — the SDK adds checksum
     // query params that XHR/fetch from the browser cannot satisfy → 403 AccessDenied.
@@ -70,7 +68,6 @@ export async function POST(request: Request) {
       expiresIn: 360,
       signableHeaders: new Set(["content-type", "host"]),
     });
-    console.log("presignedUrl", presignedUrl);
     const response = {
       presignedUrl,
       key: uniqueKey,
@@ -78,7 +75,6 @@ export async function POST(request: Request) {
     };
     return NextResponse.json(response);
   } catch (error) {
-    console.log("error", error);
     return NextResponse.json(
       {
         error: "Failed to generate preSigned Url",

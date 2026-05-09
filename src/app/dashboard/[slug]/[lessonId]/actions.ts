@@ -26,8 +26,6 @@ export const markLessonAsCompleted = async (lessonId: string, slug: string) => {
     revalidatePath(`/dashboard/${slug}/${lessonId}`);
     return { status: "success", message: "Lesson marked as completed" };
   } catch (error) {
-    console.log("eeeeeeeeeee", error);
-
     return { status: "error", message: "Failed to mark lesson as completed" };
   }
 };

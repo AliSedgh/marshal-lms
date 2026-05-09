@@ -43,7 +43,6 @@ const Uploader: FC<IProps> = ({ value, onChange, fileTypeAccepted }) => {
     key: value,
     objectUrl: value ? fileUrl : undefined,
   });
-  console.log("fileeeeeeeee", fileState);
 
   const uploadFile = useCallback(
     async (file: File) => {
@@ -82,8 +81,6 @@ const Uploader: FC<IProps> = ({ value, onChange, fileTypeAccepted }) => {
           contentType: string;
         };
 
-        console.log("22222222222222222222", presigned);
-
         await new Promise<void>((resolve, reject) => {
           const xhr = new XMLHttpRequest();
           xhr.upload.onprogress = (event) => {
@@ -96,7 +93,6 @@ const Uploader: FC<IProps> = ({ value, onChange, fileTypeAccepted }) => {
             }
           };
           xhr.onload = () => {
-            console.log("xhr.onload", xhr.status);
             if (xhr.status === 200 || xhr.status === 204) {
               setFileState((prev) => ({
                 ...prev,
@@ -139,7 +135,6 @@ const Uploader: FC<IProps> = ({ value, onChange, fileTypeAccepted }) => {
         });
       } catch (error) {
         toast.error("Something went wrong");
-        console.log("error", error);
         setFileState((prev) => ({
           ...prev,
           progress: 0,

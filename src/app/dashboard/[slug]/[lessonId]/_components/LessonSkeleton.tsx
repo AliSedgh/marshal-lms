@@ -3,7 +3,7 @@ import React from "react";
 
 const LessonSkeleton = () => {
   return (
-    <div className="flex flex-col h-full pl-6">
+    <div className="flex flex-col h-full gap-2 pl-6">
       <div className="aspect-video relative bg-muted rounded-lg overflow-hidden">
         <Skeleton className="w-full h-full" />
       </div>

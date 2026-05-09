@@ -12,8 +12,6 @@ const page = async () => {
     getEnrolledCourses(),
   ]);
 
-  console.log(enrolledCourses, "ddfdf", allCourses);
-
   return (
     <>
       <div className="flex flex-col gap-2 mb-4">

@@ -77,6 +77,7 @@ const CourseSidebar = ({ data, slug }: IProps) => {
             <CollapsibleContent className="mt-3 pl-6 border-l-2 border-border space-y-3">
               {chapter.lessons.map((lesson) => (
                 <LessonItem
+                  key={lesson.id}
                   slug={slug}
                   lesson={lesson}
                   isActive={lesson.id === currentLessonId}
