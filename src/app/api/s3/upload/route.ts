@@ -6,7 +6,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import z from "zod";
 import { S3 } from "@/lib/S3Client";
-import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
+import arcjet, { fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
