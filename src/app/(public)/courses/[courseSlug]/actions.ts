@@ -6,7 +6,6 @@ import prisma from "@/lib/db";
 import { env } from "@/lib/env";
 import { stripe } from "@/lib/stripe";
 import { request } from "@arcjet/next";
-import { redirect } from "next/navigation";
 import Stripe from "stripe";
 
 const aj = arcjet.withRule(
@@ -17,7 +16,13 @@ const aj = arcjet.withRule(
   }),
 );
 
-export async function enrollInCourseAction(courseId: string) {
+type EnrollActionResult =
+  | { status: "success"; message: string; checkoutUrl: string }
+  | { status: "error"; message: string };
+
+export async function enrollInCourseAction(
+  courseId: string,
+): Promise<EnrollActionResult> {
   const user = await requireUser();
 
   let checkoutUrl: string;
@@ -38,6 +43,7 @@ export async function enrollInCourseAction(courseId: string) {
         title: true,
         price: true,
         slug: true,
+        stripePriceId: true,
       },
     });
     if (!course) {
@@ -74,10 +80,6 @@ export async function enrollInCourseAction(courseId: string) {
         },
       });
 
-      return {
-        status: "success",
-        message: "Enrollment created successfully",
-      };
     }
     const result = await prisma.$transaction(async (tx) => {
       const existingEnrollment = await tx.enrollment.findUnique({
@@ -123,7 +125,7 @@ export async function enrollInCourseAction(courseId: string) {
 
       const checkoutSession = await stripe.checkout.sessions.create({
         customer: stripeCustomerId,
-        line_items: [{ price: "price_1TUWuQRwahxydkIEfoNTZOMK", quantity: 1 }],
+        line_items: [{ price: course.stripePriceId, quantity: 1 }],
         mode: "payment",
         success_url: `${env.BETTER_AUTH_URL}/payment/success`,
         cancel_url: `${env.BETTER_AUTH_URL}/payment/cancel`,
@@ -147,5 +149,9 @@ export async function enrollInCourseAction(courseId: string) {
     }
     return { status: "error", message: "Failed to enroll in course" };
   }
-  redirect(checkoutUrl);
+  return {
+    status: "success",
+    message: "Redirecting to payment...",
+    checkoutUrl,
+  };
 }

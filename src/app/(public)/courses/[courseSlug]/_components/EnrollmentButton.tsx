@@ -12,13 +12,13 @@ const EnrollmentButton = ({ courseId }: { courseId: string }) => {
   const handleEnroll = () => {
     startTransition(async () => {
       const result = await tryCatch(enrollInCourseAction(courseId));
-
       if (result.error) {
-        console.log(result.error);
         toast.error("An unexpected error occurred please try again");
+        return;
       }
       if (result.data?.status === "success") {
         toast.success(result.data.message);
+        window.location.href = result.data.checkoutUrl;
       } else if (result.data?.status === "error") {
         toast.error(result.data.message);
       }

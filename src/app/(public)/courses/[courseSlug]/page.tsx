@@ -21,7 +21,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { enrollInCourseAction } from "./actions";
 import { checkInCourseBought } from "@/app/data/user/user-is-enroll";
 import Link from "next/link";
 import EnrollmentButton from "./_components/EnrollmentButton";
