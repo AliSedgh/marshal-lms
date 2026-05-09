@@ -15,28 +15,13 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/admin",
+      url: "/dashboard",
       icon: <LayoutDashboardIcon />,
     },
     {
       title: "courses",
-      url: "/admin/courses",
+      url: "/dashboard/courses",
       icon: <ListIcon />,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: <ChartBarIcon />,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: <FolderIcon />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <UsersIcon />,
     },
   ],
 };

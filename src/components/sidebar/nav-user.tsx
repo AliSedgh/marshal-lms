@@ -27,15 +27,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+export function NavUser({}) {
   const { isMobile } = useSidebar();
   const { data: session, isPending } = authClient.useSession();
   const signOutHandler = useSignout();
@@ -92,7 +84,7 @@ export function NavUser({
                       session?.user?.image ||
                       `https://avatar.vercel.sh/${session?.user?.email}`
                     }
-                    alt={user.name}
+                    alt={session?.user?.name || ""}
                   />
                   <AvatarFallback className="rounded-lg">
                     {session?.user?.name && session.user.name.length > 0
