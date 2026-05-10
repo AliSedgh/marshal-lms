@@ -1,8 +1,10 @@
 import { getAllCourses } from "@/app/data/course/get-all-courses";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import PublicCourseCard, {
   PublicCourseCardSkeleton,
 } from "../_components/PublicCourseCard";
+
+export const dynamic = "force-dynamic";
 
 const PublicCoursesPage = () => {
   return (
