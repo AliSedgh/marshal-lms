@@ -5,6 +5,7 @@ import {
   ChevronDown,
   Home,
   LayoutDashboardIcon,
+  Loader2,
   LogOut,
   Settings,
   ShieldCheck,
@@ -114,13 +115,26 @@ const UserDropdown = ({ name, email, image, role, onRoleChanged }: IProps) => {
           <LogOut />
           Log out
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className="hover:bg-transparent"
-          onClick={changeRoleHandler}
-        >
-          <Button className="w-full">
-            <IconSwitch size={16} className="opacity-60" aria-hidden />
-            {role === "admin" ? "Switch to User" : "Switch to Admin"}
+        <DropdownMenuItem className="hover:bg-transparent">
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              changeRoleHandler();
+            }}
+            disabled={isPending}
+            className="w-full"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Switching...
+              </>
+            ) : (
+              <>
+                <IconSwitch size={16} className="opacity-60" aria-hidden />
+                {role === "admin" ? "Switch to User" : "Switch to Admin"}
+              </>
+            )}
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>

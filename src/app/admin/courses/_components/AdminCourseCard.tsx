@@ -74,7 +74,7 @@ const AdminCourseCard = ({ course }: IProps) => {
         <CardContent className="p-4">
           <Link
             className="font-medium text-lg line-clamp-2 hover:underline group-hover:text-primary transition-colors"
-            href={`/admin/courses/${course.slug}`}
+            href={`/admin/courses/${course.id}/edit`}
           >
             {course.title}
           </Link>
