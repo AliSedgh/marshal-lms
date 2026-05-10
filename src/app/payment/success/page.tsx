@@ -25,7 +25,7 @@ const PaymentSuccessPage = () => {
               Congrats your payment was successful.you can now start learning
             </p>
             <Button className="w-full mt-5" asChild>
-              <Link href={"/"}>
+              <Link href={"/dashboard"}>
                 <ArrowLeft className="size-4 mr-2" />
                 Go to Dashboard
               </Link>
