@@ -45,7 +45,7 @@ const CourseProgressCard = ({ course }: IProps) => {
         </p>
 
         <div className="space-y-4 mt-5">
-          <div className="flex items-center gap-x-2 justify-between  mb-1">
+          <div className="flex items-center gap-x-2 justify-between   mb-2">
             <p>progress:</p>
             <p className="font-medium">{progressPercentage}%</p>
           </div>

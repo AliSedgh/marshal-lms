@@ -18,7 +18,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
           className="flex items-center gap-2 self-center font-medium"
           href="/"
         >
-          <Image src="/vercel.svg" alt="Logo" width={32} height={32} />
+          <Image src="/logo.jpg" alt="Logo" width={32} height={22} />
           MarshalLMS
         </Link>
       </div>

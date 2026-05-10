@@ -1,18 +1,9 @@
-"use client";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ui/them-toggle";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface featureProps {
   title: string;
@@ -46,7 +37,10 @@ const features: featureProps[] = [
     icon: "👥",
   },
 ];
-export default function Home() {
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   return (
     <>
       <section className="relative py-20">
@@ -63,9 +57,11 @@ export default function Home() {
             <Button size={"lg"} asChild>
               <Link href={"/courses"}>Explore Courses</Link>
             </Button>
-            <Button size={"lg"} variant={"outline"} asChild>
-              <Link href={"/login"}>Signin</Link>
-            </Button>
+            {!session && (
+              <Button size={"lg"} variant={"outline"} asChild>
+                <Link href={"/login"}>Signin</Link>
+              </Button>
+            )}
           </div>
         </div>
       </section>

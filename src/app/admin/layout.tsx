@@ -23,21 +23,6 @@ const data = {
       url: "/admin/courses",
       icon: <ListIcon />,
     },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: <ChartBarIcon />,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: <FolderIcon />,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: <UsersIcon />,
-    },
   ],
 };
 

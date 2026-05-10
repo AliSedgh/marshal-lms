@@ -40,7 +40,7 @@ const CourseSidebar = ({ data, slug }: IProps) => {
             </p>
           </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 mt-6">
           <div className="flex justify-between text-xs">
             <span className="text-muted-foreground">Progress</span>
             <span className="font-medium">

@@ -26,11 +26,36 @@ import {
   Tv2,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const AdminItems = [
+  {
+    title: "Dashboard",
+    url: "/admin",
+    icon: <LayoutDashboardIcon />,
+  },
+
+  {
+    title: "Courses",
+    url: "/admin/courses",
+    icon: <Tv2 />,
+  },
+];
+
+const UserItems = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: <LayoutDashboardIcon />,
+  },
+];
 
 export function NavUser({}) {
   const { isMobile } = useSidebar();
   const { data: session, isPending } = authClient.useSession();
   const signOutHandler = useSignout();
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
 
   if (isPending) return null;
 
@@ -112,18 +137,14 @@ export function NavUser({}) {
                   Homepage
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={"/admin"}>
-                  <LayoutDashboardIcon />
-                  Dashboard
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={"/admin/courses"}>
-                  <Tv2 />
-                  Courses
-                </Link>
-              </DropdownMenuItem>
+              {(isAdmin ? AdminItems : UserItems).map((item) => (
+                <DropdownMenuItem key={item.title} asChild>
+                  <Link href={item.url}>
+                    <LayoutDashboardIcon />
+                    {item.title}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOutHandler}>

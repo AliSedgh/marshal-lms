@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { LessonSchema, LessonSchemaType } from "@/lib/zodSchema";
 import Link from "next/link";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -153,7 +153,14 @@ const LessonForm = ({ data, chapterId, courseId }: IProps) => {
               />
             </FieldGroup>
             <Button className="w-full" type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save"}
+              {isPending ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>Save</>
+              )}{" "}
             </Button>
           </form>
         </CardContent>

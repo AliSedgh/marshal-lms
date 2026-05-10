@@ -7,6 +7,7 @@ import {
   LayoutDashboardIcon,
   LogOut,
   Settings,
+  ShieldCheck,
   User,
 } from "lucide-react";
 
@@ -22,6 +23,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import useSignout from "@/hooks/useSignout";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { changeRole } from "@/actions/changeRole";
+import { toast } from "sonner";
+import { IconSwitch } from "@tabler/icons-react";
 
 export const title = "Profile with Preferences";
 
@@ -29,10 +35,28 @@ interface IProps {
   name: string;
   email: string;
   image: string;
+  role: string;
+  onRoleChanged?: () => void | Promise<void>;
 }
 
-const UserDropdown = ({ name, email, image }: IProps) => {
+const UserDropdown = ({ name, email, image, role, onRoleChanged }: IProps) => {
   const signOutHandler = useSignout();
+  const [isPending, startTransition] = useTransition();
+  const changeRoleHandler = () => {
+    startTransition(async () => {
+      const result = await tryCatch(changeRole());
+      if (result.error) {
+        toast.error("unexpected error occurred");
+        return;
+      }
+      if (result.data.status === "success") {
+        toast.success(result.data.message);
+        await onRoleChanged?.();
+      } else {
+        toast.error(result.data.message);
+      }
+    });
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -72,11 +96,32 @@ const UserDropdown = ({ name, email, image }: IProps) => {
             Dashboard
           </Link>
         </DropdownMenuItem>
+        {role === "admin" && (
+          <DropdownMenuItem asChild>
+            <Link href={"/admin"}>
+              <LayoutDashboardIcon
+                size={16}
+                className="opacity-60"
+                aria-hidden
+              />
+              Admin Dashboard
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
 
         <DropdownMenuItem variant="destructive" onClick={signOutHandler}>
           <LogOut />
           Log out
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="hover:bg-transparent"
+          onClick={changeRoleHandler}
+        >
+          <Button className="w-full">
+            <IconSwitch size={16} className="opacity-60" aria-hidden />
+            {role === "admin" ? "Switch to User" : "Switch to Admin"}
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

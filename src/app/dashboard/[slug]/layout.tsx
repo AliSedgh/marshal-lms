@@ -10,11 +10,12 @@ interface IProps {
 const layout = async ({ children, params }: IProps) => {
   const { slug } = await params;
   const data = await getCourseSidebar(slug);
+
   return (
-    <div className="flex flex-1">
+    <div className="flex min-h-0 h-full flex-1">
       {/* //sidebear */}
 
-      <div className="w-80  border-border shrink-0 border-r">
+      <div className="w-80 min-h-0  border-border  h-full shrink-0 border-r">
         <CourseSidebar slug={slug} data={data} />
       </div>
       {/* //main content */}

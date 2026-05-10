@@ -3,6 +3,8 @@ import { CloudUploadIcon, ImageIcon, Loader2, XIcon } from "lucide-react";
 import { FC } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { Progress } from "../ui/progress";
+import CircularProgress from "../general/CircleProgress";
 
 interface IProps {
   isDragActive: boolean;
@@ -102,8 +104,17 @@ export const RenderUploadingState = ({
   file: File;
 }) => {
   return (
-    <div className="text-center items-center justify-center flex-col">
-      <p>{progress}</p>
+    <div className="text-center items-center flex justify-center flex-col">
+      <CircularProgress
+        className="stroke-primary/25"
+        labelClassName="text-xl font-bold"
+        progressClassName="stroke-primary"
+        renderLabel={(progress) => `${progress}%`}
+        showLabel
+        size={120}
+        strokeWidth={10}
+        value={progress}
+      />{" "}
       <p className="mt-2 text-foreground text-sm font-medium">Uploading...</p>
       <p className="mt-1 text-xs text-muted-foreground truncate max-w-xs">
         {file.name}

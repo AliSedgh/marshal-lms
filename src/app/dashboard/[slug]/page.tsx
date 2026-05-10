@@ -10,7 +10,7 @@ const page = async ({ params }: IProps) => {
   const { slug } = await params;
   const course = await getCourseSidebar(slug);
   const firstChapter = course?.chapter[0];
-  const firstLesson = firstChapter.lessons[0];
+  const firstLesson = firstChapter?.lessons[0];
   if (firstLesson) {
     redirect(`/dashboard/${slug}/${firstLesson.id}`);
   }

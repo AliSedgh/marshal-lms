@@ -107,7 +107,7 @@ const NewChapterModal = ({ courseId }: IProps) => {
             <Button type="submit" className="w-full">
               {isPending ? (
                 <>
-                  <Loader2 className="size-4" />
+                  <Loader2 className="size-4 animate-spin" />
                   Saving...
                 </>
               ) : (
