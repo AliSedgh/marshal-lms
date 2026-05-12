@@ -1,5 +1,7 @@
-import React, { FC } from "react";
-import { type Editor, useEditorState } from "@tiptap/react";
+"use client";
+
+import React, { FC, useRef, useState } from "react";
+import { type Editor } from "@tiptap/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import {
   BoldIcon,
@@ -7,7 +9,6 @@ import {
   Heading2Icon,
   Heading3Icon,
   Heading4Icon,
-  HeadingIcon,
   ItalicIcon,
   ListIcon,
   ListOrderedIcon,
@@ -17,7 +18,21 @@ import {
   AlignRightIcon,
   Undo,
   Redo,
+  ImagePlus,
+  Link2,
 } from "lucide-react";
+import { toast } from "sonner";
+import { uploadImageToS3 } from "@/lib/upload-image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import { Toggle } from "../ui/toggle";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -26,8 +41,60 @@ interface IProps {
   editor: Editor | null;
 }
 
+function insertImageNode(editor: Editor, src: string) {
+  editor
+    .chain()
+    .focus()
+    .insertContent({ type: "image", attrs: { src } })
+    .run();
+}
+
 const Menubar: FC<IProps> = ({ editor }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [urlDialogOpen, setUrlDialogOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+
   if (!editor) return null;
+
+  const onImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !file.type.startsWith("image/")) return;
+    const max = 5 * 1024 * 1024;
+    if (file.size > max) {
+      toast.error("Image must be 5MB or smaller");
+      return;
+    }
+    toast.promise(
+      uploadImageToS3(file).then((src) => {
+        insertImageNode(editor, src);
+      }),
+      {
+        loading: "Uploading image…",
+        success: "Image added",
+        error: (e) =>
+          e instanceof Error ? e.message : "Upload failed",
+      },
+    );
+  };
+
+  const insertImageFromUrl = () => {
+    const raw = imageUrl.trim();
+    if (!raw) {
+      toast.error("Enter an image URL");
+      return;
+    }
+    try {
+      const u = new URL(raw);
+      if (u.protocol !== "http:" && u.protocol !== "https:") throw new Error();
+      insertImageNode(editor, u.href);
+      setImageUrl("");
+      setUrlDialogOpen(false);
+    } catch {
+      toast.error("Enter a valid http(s) image URL");
+    }
+  };
+
   return (
     <div className="border border-input rounded-t-lg p-2 border-t-0 bg-card flex flex-wrap gap-1 border-x-0 items-center">
       <div className="flex flex-wrap gap-1">
@@ -190,6 +257,42 @@ const Menubar: FC<IProps> = ({ editor }) => {
         </Tooltip>
       </div>
       <div className="w-px h-6 bg-border mx-2"></div>
+      <div className="flex flex-wrap gap-1">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/jpg,image/webp,image/gif"
+          className="sr-only"
+          onChange={onImageFileChange}
+        />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <ImagePlus className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Upload image</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => setUrlDialogOpen(true)}
+            >
+              <Link2 className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Image from URL</TooltipContent>
+        </Tooltip>
+      </div>
+      <div className="w-px h-6 bg-border mx-2"></div>
       <div className="flex  flex-wrap gap-1">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -277,6 +380,49 @@ const Menubar: FC<IProps> = ({ editor }) => {
           <TooltipContent>Redo</TooltipContent>
         </Tooltip>
       </div>
+      <Dialog
+        open={urlDialogOpen}
+        onOpenChange={(open) => {
+          setUrlDialogOpen(open);
+          if (!open) setImageUrl("");
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Image URL</DialogTitle>
+            <DialogDescription>
+              Paste a direct link to an image (https://…).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-2">
+            <Label htmlFor="rte-image-url">URL</Label>
+            <Input
+              id="rte-image-url"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  insertImageFromUrl();
+                }
+              }}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setUrlDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="button" onClick={insertImageFromUrl}>
+              Insert
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

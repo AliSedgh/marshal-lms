@@ -195,3 +195,73 @@
     @apply font-sans;
   }
 }
+
+/* TipTap ResizableNodeView: handles are empty divs until styled */
+.tiptap [data-resize-handle],
+.ProseMirror [data-resize-handle] {
+  z-index: 2;
+  box-sizing: border-box;
+  background: var(--primary);
+  border: 2px solid var(--background);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+
+.tiptap [data-resize-handle="top-left"],
+.tiptap [data-resize-handle="top-right"],
+.tiptap [data-resize-handle="bottom-left"],
+.tiptap [data-resize-handle="bottom-right"],
+.ProseMirror [data-resize-handle="top-left"],
+.ProseMirror [data-resize-handle="top-right"],
+.ProseMirror [data-resize-handle="bottom-left"],
+.ProseMirror [data-resize-handle="bottom-right"] {
+  width: 12px;
+  height: 12px;
+}
+
+.tiptap [data-resize-handle="top"],
+.tiptap [data-resize-handle="bottom"],
+.ProseMirror [data-resize-handle="top"],
+.ProseMirror [data-resize-handle="bottom"] {
+  height: 10px;
+}
+
+.tiptap [data-resize-handle="left"],
+.tiptap [data-resize-handle="right"],
+.ProseMirror [data-resize-handle="left"],
+.ProseMirror [data-resize-handle="right"] {
+  width: 10px;
+}
+
+.tiptap [data-resize-handle="bottom-right"],
+.ProseMirror [data-resize-handle="bottom-right"] {
+  cursor: nwse-resize;
+}
+.tiptap [data-resize-handle="bottom-left"],
+.ProseMirror [data-resize-handle="bottom-left"] {
+  cursor: nesw-resize;
+}
+.tiptap [data-resize-handle="top-right"],
+.ProseMirror [data-resize-handle="top-right"] {
+  cursor: nesw-resize;
+}
+.tiptap [data-resize-handle="top-left"],
+.ProseMirror [data-resize-handle="top-left"] {
+  cursor: nwse-resize;
+}
+.tiptap [data-resize-handle="right"],
+.ProseMirror [data-resize-handle="right"] {
+  cursor: ew-resize;
+}
+.tiptap [data-resize-handle="left"],
+.ProseMirror [data-resize-handle="left"] {
+  cursor: ew-resize;
+}
+.tiptap [data-resize-handle="bottom"],
+.ProseMirror [data-resize-handle="bottom"] {
+  cursor: ns-resize;
+}
+.tiptap [data-resize-handle="top"],
+.ProseMirror [data-resize-handle="top"] {
+  cursor: ns-resize;
+}

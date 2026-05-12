@@ -1,7 +1,7 @@
-import { env } from "@/lib/env";
+import { getPublicObjectUrl } from "@/lib/upload-image";
 
 const useConstructUrl = (key: string) => {
-  return `https://${env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.tigrisfiles.io/${key}`;
+  return getPublicObjectUrl(key);
 };
 
 export default useConstructUrl;
