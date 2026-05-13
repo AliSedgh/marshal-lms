@@ -26,6 +26,8 @@ model User {
   enrollment       Enrollment[]
   stripeCustomerId String?          @unique
   lessonProgress   LessonProgress[]
+  comments         Comment[]
+  commentVotes     CommentVote[]
   role             String?
   banned           Boolean?         @default(false)
   banReason        String?
@@ -104,6 +106,41 @@ model Course {
   userId           String
   chapter          Chapter[]
   enrollments      Enrollment[]
+  comments         Comment[]
+}
+
+model Comment {
+  id        String        @id @default(uuid())
+  content   String
+  createdAt DateTime      @default(now())
+  course    Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  votes     CommentVote[]
+
+  @@index([courseId])
+  @@map("comment")
+}
+
+enum CommentVoteType {
+  Like
+  Dislike
+}
+
+model CommentVote {
+  id        String           @id @default(uuid())
+  type      CommentVoteType
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  comment   Comment          @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@unique([commentId, userId])
+  @@index([commentId])
+  @@map("comment_vote")
 }
 
 enum CourseLevel {

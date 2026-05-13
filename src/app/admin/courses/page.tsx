@@ -25,6 +25,7 @@ const page = async () => {
 
 const RenderCourses = async () => {
   const courses = await getAdminCourses();
+  console.log("courses", courses);
   return (
     <>
       {courses?.length === 0 ? (

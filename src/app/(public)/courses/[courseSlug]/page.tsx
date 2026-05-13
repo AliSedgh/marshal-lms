@@ -24,6 +24,10 @@ import { Button } from "@/components/ui/button";
 import { checkInCourseBought } from "@/app/data/user/user-is-enroll";
 import Link from "next/link";
 import EnrollmentButton from "./_components/EnrollmentButton";
+import { CommentForm } from "./_components/comments/CommentForm";
+import { CommentList } from "./_components/comments/CommentList";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface IProps {
   params: Promise<{ courseSlug: string }>;
@@ -33,9 +37,14 @@ const SlugPage: FC<IProps> = async ({ params }) => {
   const { courseSlug } = await params;
   const course = await getIndividualCourse(courseSlug);
   const isEnrolled = await checkInCourseBought(course.id);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const isAuthenticated = Boolean(session?.user);
   const url = `https://${env.NEXT_PUBLIC_AWS_BUCKET_NAME}.t3.tigrisfiles.io/${course.fileKey}`;
 
   return (
+    <>
     <div className="grid grid-cols-1 mt-5 lg:grid-cols-3 gap-8">
       <div className="order-1 lg:col-span-2">
         <div className="relative aspect-video w-full overflow-hidden rounded-xl shadow-lg">
@@ -264,6 +273,20 @@ const SlugPage: FC<IProps> = async ({ params }) => {
         </div>
       </div>
     </div>
+    <section className="mt-14 space-y-8 border-t pt-10">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-semibold tracking-tight">Comments</h2>
+        <p className="text-sm text-muted-foreground">
+          Questions and discussion about this course.
+        </p>
+      </div>
+      <CommentList courseId={course.id} />
+      <CommentForm
+        courseId={course.id}
+        isAuthenticated={isAuthenticated}
+      />
+    </section>
+    </>
   );
 };
 
