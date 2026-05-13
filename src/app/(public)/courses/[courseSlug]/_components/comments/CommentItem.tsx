@@ -1,24 +1,7 @@
+import type { CourseCommentWithVotes } from "@/app/data/course/get-course-comments";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FC } from "react";
-import {
-  CommentVoteButtons,
-  type CommentVoteTypeUi,
-} from "./CommentVoteButtons";
-
-export type CommentItemData = {
-  id: string;
-  content: string;
-  createdAt: Date;
-  user: {
-    name: string;
-    image: string | null;
-    email: string | null;
-  };
-  likeCount: number;
-  dislikeCount: number;
-  currentUserVote: CommentVoteTypeUi;
-  canVote: boolean;
-};
+import { CommentVoteButtons } from "./CommentVoteButtons";
 
 const formatCommentDate = (date: Date) =>
   new Intl.DateTimeFormat("en-US", {
@@ -33,27 +16,44 @@ const initialLetter = (name: string) => {
 };
 
 interface CommentItemProps {
-  comment: CommentItemData;
+  comment: CourseCommentWithVotes;
+  isLast: boolean;
 }
 
-export const CommentItem: FC<CommentItemProps> = ({ comment }) => {
+export const CommentItem: FC<CommentItemProps> = ({ comment, isLast }) => {
   const { user } = comment;
 
   return (
     <div className="flex gap-4">
-      <Avatar className="size-10 shrink-0">
-        {user.image?.trim() ? (
-          <AvatarImage src={user.image} alt={user.name} />
+      <div className="flex w-10 shrink-0 flex-col items-center self-stretch">
+        <Avatar className="size-10 shrink-0">
+          {user.image?.trim() ? (
+            <AvatarImage src={user.image} alt={user.name} />
+          ) : null}
+          <AvatarFallback>
+            {initialLetter(user.name || user.email || "")}
+          </AvatarFallback>
+        </Avatar>
+        {!isLast ? (
+          <div
+            className="mx-auto mt-2 w-0 min-h-0 flex-1 border-l border-dashed border-border"
+            aria-hidden
+          />
         ) : null}
-        <AvatarFallback>
-          {initialLetter(user.name || user.email || "")}
-        </AvatarFallback>
-      </Avatar>
-      <div className="min-w-0 flex-1 space-y-1">
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span className="font-medium leading-none">{user.name}</span>
+      </div>
+      <div
+        className={
+          isLast
+            ? "min-w-0 flex-1 space-y-1"
+            : "min-w-0 flex-1 space-y-1 pb-6"
+        }
+      >
+        <div className="flex items-baseline justify-between gap-3">
+          <span className="min-w-0 truncate font-medium leading-none">
+            {user.name}
+          </span>
           <time
-            className="text-xs text-muted-foreground"
+            className="shrink-0 text-right text-xs text-muted-foreground tabular-nums whitespace-nowrap"
             dateTime={comment.createdAt.toISOString()}
           >
             {formatCommentDate(comment.createdAt)}

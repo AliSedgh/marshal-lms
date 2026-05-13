@@ -1,6 +1,6 @@
 "use client";
 
-import { createComment } from "../../comment-actions";
+import { createComment } from "../../actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";

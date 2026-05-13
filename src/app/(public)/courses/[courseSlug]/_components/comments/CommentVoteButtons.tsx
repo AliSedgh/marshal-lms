@@ -1,6 +1,6 @@
 "use client";
 
-import { setCommentVote } from "../../comment-actions";
+import { setCommentVote } from "../../actions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
